@@ -3,47 +3,84 @@ All of the code that I produce to be used to create my own gaming console
 
 CPU specs:
 
-32 bit cpu \n
+
+32 bit cpu
+
 32 registers in register file
+
 524KB of RAM
+
 32KB of instruction storage
 
 Encoding fomrat 
+
 XXXXXXXXXXXXXXXXX XXXXX XXXXX XXXXX
+
 Immediate value    Reg1  Reg2 opcode
 
 cpu instructions
 0-ADD
+
 1-SUB
+
 2-AND
+
 3-OR
+
 4-XOR
+
 5-SHIFT LOGICAL
+
 6-SHIFT ARITH
+
 7-IS LESS THAN UNSIGNED
+
 8-IS LESS THAN SIGNED
+
 9-IS EQUAL
+
 10-IS NOT EQUAL
+
 11-ADDI
+
 12-ANDI
+
 13-ORI
+
 14-XORI
+
 15-SHIFT LOGICALI
+
 16-SHIFT ARITHI
+
 17-IS LESS THAN UNSIGNEDI
+
 18-IS LESS THAN SIGNEDI
+
 19-IS EQUALI
+
 20-IS NOT EQUALI
+
 21-LOAD WORD
+
 22-STORE WORD
+
 23-BRANCH IF TRUE
+
 24-BRANCH IF FALSE
+
 25-JUMP AND LINK
+
 26-JUMP AND LINK REG
+
 27 LOAD IMM
+
 28-LOAD UPPER IMM
+
 29-ADD UPPER IMM TO PC
+
 30-ENVIORNMENT CALL
+
 31-ENVIORNMENT BREAK
 
 
