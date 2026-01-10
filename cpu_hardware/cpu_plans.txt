@@ -1,0 +1,49 @@
+32 bit cpu
+
+32 registers, each 32 bits
+
+2^17 by 32 RAM
+
+XXXXXXXXXXXXXXXXX XXXXX XXXXX XXXXX
+Immediate/reg2    reg1  rd    opcode
+
+
+0-ADD
+1-SUB
+2-AND
+3-OR
+4-XOR
+5-SHIFT LOGICAL
+6-SHIFT ARITH
+7-IS LESS THAN UNSIGNED
+8-IS LESS THAN SIGNED
+9-IS EQUAL
+10-IS NOT EQUAL
+11-ADDI
+12-ANDI
+13-ORI
+14-XORI
+15-SHIFT LOGICALI
+16-SHIFT ARITHI
+17-IS LESS THAN UNSIGNEDI
+18-IS LESS THAN SIGNEDI
+19-IS EQUALI
+20-IS NOT EQUALI
+21-LOAD WORD
+22-STORE WORD
+23-BRANCH IF TRUE
+24-BRANCH IF FALSE
+25-JUMP AND LINK
+26-JUMP AND LINK REG
+27 LOAD IMM
+28-LOAD UPPER IMM
+29-ADD UPPER IMM TO PC
+30-ENVIORNMENT CALL
+31-ENVIORNMENT BREAK
+
+
+Notes: 
+If loading or storing, always make reg1 zero
+False is 0, true is anything else
+With branch instructions, it will check reg1, we do not care what rd is
+With jump and link, we do not care what reg1 is
