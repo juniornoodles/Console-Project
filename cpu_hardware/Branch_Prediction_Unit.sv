@@ -49,7 +49,7 @@ localparam ADD = 5'd0,
 logic [16:0] not_predicted_offset_IF;
 logic [16:0] not_predicted_offset_ID;
 
-always_ff @(posedge clk) begin
+    always_ff @(posedge clk) begin // Here so if the branch prediction is wrong, the correct offset can be recovered
     if (stall | halted) begin
         not_predicted_offset_ID <= not_predicted_offset_ID;
         not_predicted_offset <= not_predicted_offset;
@@ -61,7 +61,7 @@ end
 
 always_comb begin
     if (opcode == BT || opcode == BF) begin
-        if ($signed(branch_target) >= 0) begin
+        if ($signed(branch_target) >= 0) begin //BTFNT prediction
             predicted_offset = 17'd1;
             not_predicted_offset_IF = branch_target - 17'd2;
         end else begin
@@ -76,5 +76,6 @@ always_comb begin
         not_predicted_offset_IF = 17'd0;
     end
 end
+
 
 endmodule
