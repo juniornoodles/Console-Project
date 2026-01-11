@@ -41,7 +41,7 @@ public class Assembler {
 			instruction++;
 			for(int i = 0; i < tokens.length; i++) {
 				if(tokens[i].indexOf(":") == 0) {
-					labels.add(new Branch(tokens[i].substring(1),lineNum));
+					labels.add(new Branch(tokens[i].substring(1),instruction));
 				}
 			}
 			
@@ -336,4 +336,5 @@ public class Assembler {
 		}
 		return binaryNum;
 	}
+
 }
