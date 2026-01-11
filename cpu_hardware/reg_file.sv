@@ -16,7 +16,6 @@ module reg_file (
 );
 assign rd1_data = rd1_addr == 0 ? 32'b0 : rd1_addr == wr_addr & write_en ? wr_data : registers[rd1_addr];
 assign rd2_data = rd2_addr == 0 ? 32'b0 : rd2_addr == wr_addr & write_en ? wr_data : registers[rd2_addr];
-genvar i;
 logic [31:0] registers [31:0];
 always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
@@ -30,4 +29,5 @@ always_ff @(posedge clk or posedge reset) begin
 end
 
 endmodule
+
 
