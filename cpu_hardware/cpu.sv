@@ -68,7 +68,7 @@ localparam ADD = 5'd0,
            JALR = 5'd26,
            LI = 5'd27,
            LUI = 5'd28,
-           AUITPC = 5'd29,
+           SWR = 5'd29,
            ECALL = 5'd30,
            EBREAK = 5'd31;
 localparam R_TYPE = 5'd10;
@@ -133,7 +133,7 @@ reg_file reg_file_inst(
 Hazard_unit hazard_unit_inst(
     .clk(clk),
     .decode_reg1(instruction[4:0] != SW ?instruction[14:10] : instruction[9:5]), //Checks if it is a store to get contents from rd reg
-    .decode_reg2(instruction[4:0] <= R_TYPE ? instruction[19:15] : 5'b0), //If not R-type, no second reg to hazard check
+    .decode_reg2(instruction[4:0] <= R_TYPE | instruction[4:0] == SWR ? instruction[19:15] : 5'b0), //If not R-type, no second reg to hazard check
     .execute_reg_check(rd),
     .memory_reg(writeback_regaddr_in),
     .writeback_reg(writeback_regaddr),
@@ -185,7 +185,7 @@ Execute_To_Memory execute_to_memory_inst(
     .reset(reset),
     .alu_result_in(alu_op != JAL && alu_op != JALR ? alu_result : pc_EX), 
     .rd_in(rd),
-    .memaddr_in(operand2[16:0]),
+    .memaddr_in(alu_op != LW ? operand2[16:0] : alu_result[16:0]),
     .alu_op_in(alu_op),
     .alu_result_out(memdata), 
     .memaddr_out(memaddr),         
@@ -224,7 +224,7 @@ end
 
 //Decode stage
 always_comb begin  //If it is an R type then take the contents of the 2 read port, otherwise its an immediate, take it from he instruction itself. Contains sign extending logic.
-    operand2_in = (instruction[4:0] <= R_TYPE ? reg_read_addr2 : (instruction[4:0] == ADDI | instruction[4:0] == ILT | instruction[4:0] == ILTI | instruction[4:0] == SLOG | instruction[4:0] == SLOGI | instruction[4:0] == SARI | instruction[4:0] == SARII | instruction[4:0] == BT | instruction[4:0] == BF | instruction[4:0] == JALR) & instruction[31] == 1 ? {{15{1'b1}},instruction[31:15]} : {{15{1'b0}},instruction[31:15]});
+    operand2_in = (instruction[4:0] <= R_TYPE ? reg_read_addr2 : (instruction[4:0] == ADDI | instruction[4:0] == ILT | instruction[4:0] == ILTI | instruction[4:0] == SLOG | instruction[4:0] == SLOGI | instruction[4:0] == SARI | instruction[4:0] == SARII | instruction[4:0] == BT | instruction[4:0] == BF | instruction[4:0] == JALR | instruction[4:0] == LW) & instruction[31] == 1 ? {{15{1'b1}},instruction[31:15]} : {{15{1'b0}},instruction[31:15]});
     operand1_in = reg_read_addr1;
 end
 
@@ -267,7 +267,7 @@ always_ff @(posedge clk) begin
     if(!halted) begin
         write_en <= (mem_alu_op == SW | mem_alu_op == BT | mem_alu_op == BF | mem_alu_op == EBREAK) ? 1'b0 : 1'b1;
         writeback_regaddr <= writeback_regaddr_in;
-        if (mem_alu_op == SW) begin
+        if (mem_alu_op == SW | mem_alu_op == SWR) begin
             mem_data_out <= 32'b0;
             RAM[memaddr] <= memdata;
         end else if(mem_alu_op == LI) begin
@@ -338,6 +338,7 @@ initial begin
 end
 endmodule
 */
+
 
 
 
