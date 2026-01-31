@@ -42,7 +42,7 @@ localparam ADD = 5'd0,
            JALR = 5'd26,
            LI = 5'd27,
            LUI = 5'd28,
-           AUITPC = 5'd29,
+           SWR = 5'd29,
            ECALL = 5'd30,
            EBREAK = 5'd31;
 logic [16:0] not_predicted_offset_ID;
@@ -79,3 +79,4 @@ end
 
 
 endmodule
+
