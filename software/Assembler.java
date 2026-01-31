@@ -7,13 +7,18 @@ package software;
 import java.util.*;
 import java.io.*;
 
+import java.util.*;
+import java.io.*;
+
 public class Assembler {
-	private static final String INPUTFILE = ""; //put assembly file name here
-	private static final String OUTPUTFILE =""; //put machine code output file here
+	private static final String INPUTFILE = "Code.txt"; //put assembly file name here
+	private static final String OUTPUTFILE ="file.txt"; //put machine code output file here
 	private static int lineNum = 0;
 	
 	private static ArrayList<Branch> labels = new ArrayList<Branch>();
+		
 	public static void main(String args[]) {
+		ArrayList<Branch> j = labels;
 		Scanner fileReader;
 		PrintWriter writer;
 		try {
@@ -28,11 +33,10 @@ public class Assembler {
 		}
 		catch(Exception e){
 			System.out.println("Input file not found");
-            writer.close();
 			return;
 		}
 		int instruction = 0;
-		while(fileReader.hasNext()) { // scans for labels first
+		while(fileReader.hasNext()) {
 			String nextLine = fileReader.nextLine();
 			String[] tokens = nextLine.split(" ");
 			if(nextLine.equals("")) {
@@ -53,7 +57,6 @@ public class Assembler {
 		}
 		catch(Exception e){
 			System.out.println("Input file not found");
-            writer.close();
 			return;
 		}
 		instruction = 0;
@@ -61,12 +64,12 @@ public class Assembler {
 		while(fileReader.hasNextLine()) {
 			lineNum++;
 			line = fileReader.nextLine();
-			if(line.equals("")) {
+			if(line == "") {
 				continue;
 			}
 			instruction++;
 			try {
-			writer.println(parse(line,instruction));
+		writer.println(parse(line,instruction));
 		}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -76,15 +79,16 @@ public class Assembler {
 		writer.close();
 	}
 	
-	public static String parse(String line, int instruction) throws Exception{ //parses a line of assembly code into machine code
+	public static String parse(String line, int instruction) throws Exception{
 		String[] tokens = line.split("\\s");
 		int tokenSize = tokens.length;
+		String machineCode = "";
 		if(tokenSize == 0) {
 			return "";
 		}
 		boolean RType = tokens[0].equals("add")||tokens[0].equals("sub")||tokens[0].equals("and")||tokens[0].equals("or")||tokens[0].equals("xor")||tokens[0].equals("slog")||tokens[0].equals("sari")||tokens[0].equals("iltu")||tokens[0].equals("ilt")||tokens[0].equals("eq")||tokens[0].equals("neq");
 		boolean IType = tokens[0].equals("addi")||tokens[0].equals("andi")||tokens[0].equals("ori")||tokens[0].equals("xori")||tokens[0].equals("slogi")||tokens[0].equals("sarii")||tokens[0].equals("iltui")||tokens[0].equals("ilti")||tokens[0].equals("eqi")||tokens[0].equals("neqi");
-		boolean memType = tokens[0].equals("lw")||tokens[0].equals("sw")||tokens[0].equals("li")||tokens[0].equals("lui");
+		boolean memType = tokens[0].equals("sw")||tokens[0].equals("li")||tokens[0].equals("lui");
 		boolean branchType = tokens[0].equals("bt")||tokens[0].equals("bf");
 		
 		if(RType) {
@@ -202,9 +206,6 @@ public class Assembler {
 			}
 			String opcode = "";
 			switch(tokens[0]) {
-			case "lw":
-				opcode = "10101";
-				break;
 			case "sw":
 				opcode = "10110";
 				break;
@@ -292,7 +293,7 @@ public class Assembler {
 		}
 		
 		
-		if(tokens[0].equals("jalr")) {
+		if(tokens[0].equals("jalr") || tokens[0].equals("lw")) {
 			if(tokenSize < 4) {
 				throw new Exception("Line " + lineNum + " Incorrect operand amount");
 			}
@@ -307,18 +308,38 @@ public class Assembler {
 			catch (Exception e) {
 				throw new Exception("Line " + lineNum + " Error in operands");
 			}
-			return imm + reg1 + rd + "11010";
+			if(tokens[0].equals("jalr")) {
+				return imm + reg1 + rd + "11010";
+			}
+			return imm + reg1 + rd + "10101";
 		}
 		
 		if(tokens[0].equals("ebreak")) {
 			return "00000000000000000000000000011111";
 		}
 		
+		if(tokens[0].equals("swr")) {
+			if(tokenSize < 3) {
+				throw new Exception("Line " + lineNum + " Incorrect operand amount");
+			}
+			String reg1;
+			String reg2;
+			try {
+				reg1 = convertToBinary(Integer.parseInt(tokens[1].replace(",", "")),5);
+				reg2 = convertToBinary(Integer.parseInt(tokens[2].replace(",", "")),5);
+			}
+			catch (Exception e) {
+				throw new Exception("Line " + lineNum + " Error in operands");
+			}
+			return "000000000000" + reg2 + reg1 + "0000011101";
+		}
+		
+		
 		
 		throw new Exception("Line " + lineNum + " Malformed statement");
 	}
 	
-	public static String convertToBinary(int num, int size) { // converts an integer to a binary string of given size
+	public static String convertToBinary(int num, int size) {
 		String binaryNum = "";
 		if(num>=0) {
 			for(int i = 0; i < size; i++) {
@@ -336,5 +357,4 @@ public class Assembler {
 		}
 		return binaryNum;
 	}
-
 }
