@@ -79,7 +79,7 @@ cpu instructions
 
 28-LOAD UPPER IMM
 
-29-ADD UPPER IMM TO PC
+29-STORE WORD REGISTER
 
 30-ENVIORNMENT CALL
 
@@ -87,11 +87,13 @@ cpu instructions
 
 CPU Notes: 
 
-AUIPC and ECALL currently don not do anything. This is because the PC is 13 bits and the immediate section of the instruction is 17 bits. As for ecall, I do not plan on making an OS, but I kept it in just in case I change my mind later.
+Store word register just allows you to use the contents of a register as an address. Load word can already do this which will be explained later. It is this way because I did not put this implementation early on and this was the easiest solution.
+
+ECALL currently does not do anything. I do not currently plan on making an OS, but I kept it in just in case I change my mind later.
 
 With shifts, positive values shift to the right, and negative values shift to the left.
 
-If loading or storing, always make reg1 zero.
+If using SW, always make reg1 zero.
 
 False is 0, true is anything else.
 
@@ -114,7 +116,9 @@ branches:  instr reg1(test reg), label
 
 jal:  jal rd, label
 
-jalr:  jalr reg1, imm, rd
+jalr and lw:  instr reg1, imm, rd (reg1 is the reg with the address, imm is the offset ammount, rd is where the execution is stored)
+
+swr:  swr reg1, rd  (reg1 is the reg with the address, rd is the data to be stored)
 
 ebreak:  ebreak
 
