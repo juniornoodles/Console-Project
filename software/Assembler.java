@@ -249,7 +249,7 @@ public class Assembler {
 			for(int i = 0; i < labels.size(); i++) {
 				if(tokens[2].equals(labels.get(i).name)) {
 					labelExists = true;
-					offset = labels.get(i).line - lineNum;
+					offset = labels.get(i).line - instruction;
 				}
 			}
 			if(!labelExists) {
@@ -358,3 +358,4 @@ public class Assembler {
 		return binaryNum;
 	}
 }
+
