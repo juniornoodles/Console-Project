@@ -1,4 +1,4 @@
-module Pixel_Buffer(
+module Pixel_Buffer( // Would work for 640 x 480 resolution, but I made it 64 x 48 for easue of use
     input logic clk,
     input logic reset,
     input logic visible_x,
@@ -62,4 +62,5 @@ logic m;
 logic n;
 assign m = a == 4'd9; // Gets the next color in time from ram for vga controller
 assign read_address = START_OF_PIXELS + (y * 64) + x + m;
+
 endmodule
