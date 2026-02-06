@@ -1,4 +1,4 @@
-module VGA_Controller(
+module VGA_Controller( // Controls timing for vga
     input logic clk,
     input logic reset,
     input logic [11:0] pixel_data,
@@ -50,4 +50,5 @@ always_comb begin
 end
 assign visible_x = (h_count < 640);
 assign visible_y = (v_count < 480);
+
 endmodule
