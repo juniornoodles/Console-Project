@@ -11,6 +11,12 @@ module cpu(
     //step and finish_debug are signals for debugging when ebreak is called.
     //The cpu detects the rising edge of step and allows one cycle to go through
     //When finish_debug is turned on, debug mode turns off
+    input logic clk25, // Clock for vga timing
+    output logic hsync,
+    output logic vsync,
+    output logic [3:0] red,
+    output logic [3:0] green,
+    output logic [3:0] blue
 );
 
 logic [20:0] i;
@@ -253,7 +259,7 @@ always_ff @(posedge clk or posedge reset or posedge finish_debug) begin
         if (debug) begin
             debug <= 1'b0;
         end
-    end else if (alu_op == EBREAK) begin
+    end else if (instruction[4:0] == EBREAK & !flush) begin
         debug <= 1'b1;
     end else begin
         debug <= debug;
@@ -304,24 +310,64 @@ always_comb begin
     end
 end
 
-
+//Video Memory Mapped I/O ---------------------------------------------------------------
+localparam START_OF_PIXELS = 300;
+logic [11:0] pixel_data;
+logic [16:0] pixel_address;
+logic visible_x;
+logic visible_y;
+VGA_Controller vga_controller_inst(
+    .clk(clk25),
+    .reset(reset),
+    .pixel_data(pixel_data), 
+    .hsync(hsync),
+    .vsync(vsync),
+    .red(red),
+    .green(green),
+    .blue(blue),
+    .visible_x(visible_x),
+    .visible_y(visible_y)
+);
+Pixel_Buffer pixel_buffer_inst(
+    .clk(clk25),
+    .reset(reset),
+    .hsync(hsync),
+    .vsync(vsync),
+    .visible_x(visible_x),
+    .visible_y(visible_y),
+    .read_address(pixel_address)
+);
+always_ff @(posedge clk25) begin
+    pixel_data <= RAM[pixel_address][11:0]; //Get pixel data from video memory
+end
 
 
 endmodule
 
 module top(
-    input logic clk,
+  input logic clk,
     input logic reset_low,
-    input logic pause,
-    input logic finish_debug, //Note that vivado will optimize this out because there is no output, you can decide what the output should be
+    input logic step,
+    input logic finish_debug,
+    output logic hsync,
+    output logic vsync,
+    output logic [3:0] red,
+    output logic [3:0] green,
+    output logic [3:0] blue
 );
     logic reset;
     assign reset = ~reset_low; //Active low button
     cpu cpu_inst(
         .clk(clk),
+        .clk25(), // Use CAD tool of choice to create a clock that is 25MHz. I used vivado's clocking wizard
         .reset(reset),
-        .pause(pause),
+        .step(step),
         .finish_debug(finish_debug),
+        .vsync(vsync),
+        .hsync(hsync),
+        .red(red),
+        .blue(blue),
+        .green(green)
     );
 endmodule
 
@@ -338,6 +384,7 @@ initial begin
 end
 endmodule
 */
+
 
 
 
