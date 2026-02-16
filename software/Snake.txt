@@ -1,0 +1,199 @@
+// reg 1 holds timer
+// reg 2 holds moving state. 1 = up, 2 = down, 3 = left, 4 = right
+// reg 3 holds first pixel's position
+// reg 10 holds the color white
+// reg 11 holds the color red
+// reg 30 holds the last pixels position
+// reg 29 holds random timer for apple
+// reg 28 holds largest RAM addr used for snake
+// addr 0 in ram holds addr of the first pixel
+// addr 1 in ram holds addr of the last pixel
+// the addr of a pixel holds the pixel value
+// for a address, minus 1 is the next pixel, 
+
+li 10, 4095 :restart_snake_game
+li 2, 1
+li 3, 3212
+li 30, 3340
+li 11, 3840
+swr 10, 3
+swr 10, 30
+li 28, 7
+
+li 4, 3 // setting up RAM
+sw 4, 0
+li 4, 7
+sw 4, 1
+li 4, 5
+sw 4, 6
+sw 3, 3
+li 4, 3
+sw 4, 4
+addi 3, 64, 4
+sw 4, 5
+sw 10, 3276
+sw 30, 7
+sw 11, 1000
+
+
+lui 1, 4 :snake_loop // timer to slow movement on monitor
+li 4, 101760
+or 1, 4, 1
+bf 1, snake_timer_over :snake_timer
+addi 1, -1, 1
+jal 0, snake_timer
+
+eqi 31, 1, 4 :snake_timer_over // Reads button input to turn
+neqi 2, 2, 5
+and 4, 5, 4
+bf 4, turn_position_up
+li 2, 1
+eqi 31, 2, 4 :turn_position_up
+neqi 2, 1, 5
+and 4, 5, 4
+bf 4, turn_position_down
+li 2, 2
+eqi 31, 3, 4 :turn_position_down
+neqi 2, 4, 5
+and 4, 5, 4
+bf 4, turn_position_left
+li 2, 3
+eqi 31, 4, 4 :turn_position_left
+neqi 2, 3, 5
+and 4, 5, 4
+bf 4, turn_position_right
+li 2, 4
+
+
+
+eqi 2, 1, 4 :turn_position_right //moving up logic
+bf 4, move_up_snake
+addi 3, -64, 3
+ilti 3, 300, 4
+bf 4, loop_around_down
+addi 3, 3072, 3
+lw 3, 0, 5 :loop_around_down
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_up
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_up_snake 
+jal 6, make_snake_bigger :grow_up
+
+eqi 2, 2, 4 :move_up_snake //moving down logic
+bf 4, move_down_snake
+addi 3, 64, 3
+ilti 3, 3372, 4
+bt 4, loop_around_up
+addi 3, -3072, 3
+lw 3, 0, 5 :loop_around_up
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_down
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_down_snake 
+jal 6, make_snake_bigger :grow_down
+
+
+eqi 2, 3, 4 :move_down_snake //moving left logic
+bf 4, move_left_snake
+addi 3, -1, 3
+addi 3, 0, 4
+ilti 4, 363, 5 :loop_for_left
+bt 5, loop_around_right
+addi 4, -64, 4
+eqi 4, 363, 5
+bf 5, loop_for_left
+addi 3, 64, 3
+lw 3, 0, 5 :loop_around_right
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_left
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_left_snake 
+jal 6, make_snake_bigger :grow_left
+
+
+eqi 2, 4, 4 :move_left_snake //moving right logic
+bf 4, move_right_snake
+addi 3, 1, 3
+addi 3, 0, 4
+ilti 4, 300, 5 :loop_for_right
+bt 5, loop_around_left
+addi 4, -64, 4
+eqi 4, 300, 5
+bf 5, loop_for_right
+addi 3, -64, 3
+lw 3, 0, 5 :loop_around_left
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_right
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_right_snake 
+jal 6, make_snake_bigger :grow_right
+
+
+
+addi 29, 15, 29 :move_right_snake
+jal 0, snake_loop 
+
+
+lw 0, 1, 4 :back_to_front // logic to make the whole snake move
+lw 4, -1, 5
+lw 5, 0, 30
+sw 5, 1
+lw 0, 0, 5
+addi 5, -1, 5
+swr 4, 5
+sw 4, 0
+jalr 6, 0, 0
+
+addi 28, 2, 28 :make_snake_bigger
+lw 0, 0, 4
+addi 4, -1, 4
+swr 28, 4
+swr 3, 28
+sw 28, 0
+addi 29, 15, 29 :retry_apple_placement
+ilti 29, 3071, 4 
+bt 4, try_apple_placement
+addi 29, -3072, 29
+jal 0, retry_apple_placement
+addi 29, 300, 29 :try_apple_placement
+lw 29, 0, 4
+eq 4, 10, 4
+bt 4, retry_apple_placement
+swr 11, 29
+jalr 6, 0, 0
+
+
+li 1, 3372 :snake_done
+eqi 1, 300, 2 :exit_snake_loop
+bt 2, exit_snake
+addi 1, -1, 1
+swr 0, 1
+bf 0, exit_snake_loop
+bf 0, restart_snake_game :exit_snake
+
+
+
