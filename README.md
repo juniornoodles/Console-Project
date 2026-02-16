@@ -108,6 +108,8 @@ Register 31 is used holds the input of the FPGA buttons, where no button pressed
 
 The assembler I made is very rudimentry, I made it to make it easier to program the cpu, not for it to be used by others. However, I still think it is worth sharing.
 
+Make sure the machine code that gets produces goes to the Machine_code.mem file i the cpu_hardware folder. The instruction memory reads that file to fill the ROM with instructions.
+
 R types:  instr reg1, reg2, rd
 
 I types:  instr reg1, imm, rd
