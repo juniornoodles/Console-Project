@@ -12,6 +12,11 @@ module cpu(
     //The cpu detects the rising edge of step and allows one cycle to go through
     //When finish_debug is turned on, debug mode turns off
     input logic clk25, // Clock for vga timing
+    input logic up,
+    input logic down,
+    input logic left,
+    input logic right,
+    input logic select,
     output logic hsync,
     output logic vsync,
     output logic [3:0] red,
@@ -78,6 +83,12 @@ localparam ADD = 5'd0,
            ECALL = 5'd30,
            EBREAK = 5'd31;
 localparam R_TYPE = 5'd10;
+localparam NONE = 3'd0,
+           UP = 3'd1,
+           DOWN = 3'd2,
+           LEFT = 3'd3,
+           RIGHT = 3'd4,
+           SELECT = 3'd5;
 logic [31:0] RAM [RAM_SIZE-1:0];
 logic [12:0] pc = START_OF_PROGRAM;
 logic [31:0] instruction;
@@ -131,8 +142,13 @@ reg_file reg_file_inst(
     .write_en(write_en),
     .wr_addr(writeback_regaddr), 
     .wr_data(writeback_data), 
-    .rd1_addr(instruction[4:0] != SW  ? instruction[14:10] : instruction[9:5]), //Checks if it is a store to get contents from rd reg
+    .rd1_addr(instruction[4:0] != SW ? instruction[14:10] : instruction[9:5]), //Checks if it is a store to get contents from rd reg
     .rd2_addr(instruction[19:15]),
+    .up(up),
+    .down(down),
+    .left(left),
+    .right(right),
+    .select(select),
     .rd1_data(reg_read_addr1),
     .rd2_data(reg_read_addr2)
 );
@@ -384,6 +400,7 @@ initial begin
 end
 endmodule
 */
+
 
 
 
