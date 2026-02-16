@@ -101,6 +101,8 @@ With branch instructions, it will check reg1, we do not care what rd is.
 
 With jump and link, we do not care what reg1 is.
 
+Register 31 is used holds the input of the FPGA buttons, where no button pressed is 0, up is 1, down is 2, left is 3, right is 4, and center is 5
+
 
 # How to use Assembler
 
