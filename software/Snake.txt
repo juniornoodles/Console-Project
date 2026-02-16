@@ -1,3 +1,8 @@
+// This is the code to run snake on my cpu in my Assembly language if anybody is intrested in looking at it
+
+
+
+
 // reg 1 holds timer
 // reg 2 holds moving state. 1 = up, 2 = down, 3 = left, 4 = right
 // reg 3 holds first pixel's position
