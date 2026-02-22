@@ -91,6 +91,8 @@ Store word register just allows you to use the contents of a register as an addr
 
 ECALL currently does not do anything. I do not currently plan on making an OS, but I kept it in just in case I change my mind later.
 
+LI sign extends the msb of the 17 immediate value. Keep that in mind if you want to load numbers bigger than 2^17
+
 With shifts, positive values shift to the right, and negative values shift to the left.
 
 If using SW, always make reg1 zero.
