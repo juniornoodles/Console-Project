@@ -42,7 +42,8 @@ sw 11, 1000
 
 
 lui 1, 4 :snake_loop // timer to slow movement on monitor
-li 4, 101760
+li 4, 50880
+slogi 4, -1, 4
 or 1, 4, 1
 bf 1, snake_timer_over :snake_timer
 addi 1, -1, 1
