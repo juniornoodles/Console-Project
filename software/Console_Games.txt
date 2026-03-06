@@ -1,0 +1,1437 @@
+li 1, 300 
+swr 0, 1 :make_screen_black
+addi 1, 1, 1
+eqi 1, 3373, 2
+bf 2, make_screen_black
+
+li 30, 0 :start
+li 1, 4080 
+jal 2, Snake_text
+li 1, 4095
+jal 2, ttt_text
+jal 2, Pong_text
+
+lui 1, 35 :main_menu_loop // timer to slow movement on monitor
+li 4, 50880
+slogi 4, -1, 4
+or 1, 4, 1
+bf 1, main_menu_timer_over :main_menu_timer
+addi 1, -1, 1
+jal 0, main_menu_timer
+
+eqi 31, 2, 1 :main_menu_timer_over
+neqi 30, 2, 2
+and 1, 2, 1
+bf 1, make_up_yellow
+addi 30, 1, 30
+
+eqi 31, 1, 1 :make_up_yellow
+neqi 30, 0, 2
+and 1, 2, 1
+bf 1, make_down_yellow
+addi 30, -1, 30
+
+eqi 31, 5, 1 :make_down_yellow
+bf 1, select
+li 1, 300
+swr 0, 1 :make_screen_black1
+addi 1, 1, 1
+eqi 1, 3373, 2
+bf 2, make_screen_black1
+bf 30, snake
+eqi 30, 1, 1
+bt 1, ttt
+bf 0, pong
+
+bt 30, highlight_first :select
+li 1, 4080
+jal 2, Snake_text
+li 1, 4095
+jal 2, ttt_text
+jal 2, Pong_text
+eqi 30, 1, 1 :highlight_first
+bf 1, highlight_second 
+li 1, 4080
+jal 2, ttt_text
+li 1, 4095
+jal 2, Snake_text
+jal 2, Pong_text
+eqi 30, 2, 1 :highlight_second
+bf 1, highlight_third 
+li 1, 4080
+jal 2, Pong_text
+li 1, 4095
+jal 2, ttt_text
+jal 2, Snake_text
+bf 0, main_menu_loop :highlight_third
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sw 1, 626 :Snake_text //Writing S to pixel buffer
+sw 1, 627
+sw 1, 628
+sw 1, 629
+sw 1, 754
+sw 1, 755
+sw 1, 756
+sw 1, 757
+sw 1, 882
+sw 1, 883
+sw 1, 884
+sw 1, 885
+sw 1, 690
+sw 1, 821
+
+sw 1, 631 //Writing N to pixel buffer
+sw 1, 695
+sw 1, 759
+sw 1, 823
+sw 1, 887
+sw 1, 634
+sw 1, 698
+sw 1, 762
+sw 1, 826
+sw 1, 890
+sw 1, 696
+sw 1, 761
+
+sw 1, 700 // Writing A to pixel buffer
+sw 1, 703
+sw 1, 764
+sw 1, 767
+sw 1, 828
+sw 1, 831
+sw 1, 892
+sw 1, 895
+sw 1, 637
+sw 1, 638
+sw 1, 765
+sw 1, 766
+
+sw 1, 641 // Writing K to pixel buffer
+sw 1, 705 
+sw 1, 769
+sw 1, 833
+sw 1, 897
+sw 1, 900
+sw 1, 835
+sw 1, 770
+sw 1, 707
+sw 1, 644
+
+sw 1, 646 // Writing E to pixel buffer
+sw 1, 710
+sw 1, 774
+sw 1, 838
+sw 1, 902
+sw 1, 647
+sw 1, 648
+sw 1, 649
+sw 1, 775
+sw 1, 776
+sw 1, 777
+sw 1, 903
+sw 1, 904
+sw 1, 905
+
+jalr 2, 0, 0
+
+sw 1, 1266 :ttt_text // T
+sw 1, 1267
+sw 1, 1268
+sw 1, 1331
+sw 1, 1395
+sw 1, 1459
+sw 1, 1523
+
+sw 1, 1270 //T
+sw 1, 1271
+sw 1, 1272
+sw 1, 1335
+sw 1, 1399
+sw 1, 1463
+sw 1, 1527
+
+sw 1, 1274 //T
+sw 1, 1275
+sw 1, 1276
+sw 1, 1339
+sw 1, 1403
+sw 1, 1467
+sw 1, 1531
+
+jalr 2, 0, 0
+
+sw 1, 1906 :Pong_text //P
+sw 1, 1907
+sw 1, 1908
+sw 1, 2034
+sw 1, 2035
+sw 1, 2036
+sw 1, 1970
+sw 1, 1972
+sw 1, 2098
+sw 1, 2162
+
+sw 1, 1910 //O
+sw 1, 1911
+sw 1, 1912
+sw 1, 1974
+sw 1, 2038
+sw 1, 2102
+sw 1, 2166
+sw 1, 2167
+sw 1, 1976
+sw 1, 2040
+sw 1, 2104
+sw 1, 2168
+
+sw 1, 1914 //N
+sw 1, 1978
+sw 1, 2042
+sw 1, 2106
+sw 1, 2170
+sw 1, 1915
+sw 1, 1916
+sw 1, 1980
+sw 1, 2044
+sw 1, 2108
+sw 1, 2172
+
+sw 1, 1918 //G
+sw 1, 1919
+sw 1, 1920
+sw 1, 2046
+sw 1, 2047
+sw 1, 2048
+sw 1, 2174
+sw 1, 2175
+sw 1, 2176
+sw 1, 1982
+sw 1, 2110
+sw 1, 2112
+
+jalr 2, 0, 0
+
+
+li 10, 4095 :snake
+li 2, 1
+li 3, 3212
+li 30, 3340
+li 11, 3840
+swr 10, 3
+swr 10, 30
+li 28, 7
+
+li 4, 3 // setting up RAM
+sw 4, 0
+li 4, 7
+sw 4, 1
+li 4, 5
+sw 4, 6
+sw 3, 3
+li 4, 3
+sw 4, 4
+addi 3, 64, 4
+sw 4, 5
+sw 10, 3276
+sw 30, 7
+sw 11, 1000
+
+
+lui 1, 4 :snake_loop // timer to slow movement on monitor
+li 4, 50880
+slogi 4, -1, 4
+or 1, 4, 1
+bf 1, snake_timer_over :snake_timer
+addi 1, -1, 1
+jal 0, snake_timer
+
+eqi 31, 1, 4 :snake_timer_over // Reads button input to turn
+neqi 2, 2, 5
+and 4, 5, 4
+bf 4, turn_position_up
+li 2, 1
+eqi 31, 2, 4 :turn_position_up
+neqi 2, 1, 5
+and 4, 5, 4
+bf 4, turn_position_down
+li 2, 2
+eqi 31, 3, 4 :turn_position_down
+neqi 2, 4, 5
+and 4, 5, 4
+bf 4, turn_position_left
+li 2, 3
+eqi 31, 4, 4 :turn_position_left
+neqi 2, 3, 5
+and 4, 5, 4
+bf 4, turn_position_right
+li 2, 4
+
+
+
+eqi 2, 1, 4 :turn_position_right //moving up logic
+bf 4, move_up_snake
+addi 3, -64, 3
+ilti 3, 300, 4
+bf 4, loop_around_down
+addi 3, 3072, 3
+lw 3, 0, 5 :loop_around_down
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_up
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_up_snake 
+jal 6, make_snake_bigger :grow_up
+
+eqi 2, 2, 4 :move_up_snake //moving down logic
+bf 4, move_down_snake
+addi 3, 64, 3
+ilti 3, 3372, 4
+bt 4, loop_around_up
+addi 3, -3072, 3
+lw 3, 0, 5 :loop_around_up
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_down
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_down_snake 
+jal 6, make_snake_bigger :grow_down
+
+
+eqi 2, 3, 4 :move_down_snake //moving left logic
+bf 4, move_left_snake
+addi 3, -1, 3
+addi 3, 0, 4
+ilti 4, 363, 5 :loop_for_left
+bt 5, loop_around_right
+addi 4, -64, 4
+eqi 4, 363, 5
+bf 5, loop_for_left
+addi 3, 64, 3
+lw 3, 0, 5 :loop_around_right
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_left
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_left_snake 
+jal 6, make_snake_bigger :grow_left
+
+
+eqi 2, 4, 4 :move_left_snake //moving right logic
+bf 4, move_right_snake
+addi 3, 1, 3
+addi 3, 0, 4
+ilti 4, 300, 5 :loop_for_right
+bt 5, loop_around_left
+addi 4, -64, 4
+eqi 4, 300, 5
+bf 5, loop_for_right
+addi 3, -64, 3
+lw 3, 0, 5 :loop_around_left
+eq 5, 10, 4
+bt 4, snake_done
+eq 5, 11, 5
+swr 10, 3 
+bt 5, grow_right
+swr 0, 30
+jal 6, back_to_front
+lw 0, 0, 4
+swr 3, 4
+jal 0, move_right_snake 
+jal 6, make_snake_bigger :grow_right
+
+
+
+addi 29, 15, 29 :move_right_snake
+jal 0, snake_loop 
+
+
+lw 0, 1, 4 :back_to_front // logic to make the whole snake move
+lw 4, -1, 5
+lw 5, 0, 30
+sw 5, 1
+lw 0, 0, 5
+addi 5, -1, 5
+swr 4, 5
+sw 4, 0
+jalr 6, 0, 0
+
+addi 28, 2, 28 :make_snake_bigger
+lw 0, 0, 4
+addi 4, -1, 4
+swr 28, 4
+swr 3, 28
+sw 28, 0
+addi 29, 15, 29 :retry_apple_placement
+ilti 29, 3071, 4 
+bt 4, try_apple_placement
+addi 29, -3072, 29
+jal 0, retry_apple_placement
+addi 29, 300, 29 :try_apple_placement
+lw 29, 0, 4
+eq 4, 10, 4
+bt 4, retry_apple_placement
+swr 11, 29
+jalr 6, 0, 0
+
+
+li 1, 300 :snake_done
+swr 0, 1 :make_screen_black2
+addi 1, 1, 1
+eqi 1, 3373, 2
+bf 2, make_screen_black2
+jal 2, game_over 
+bf 4, snake
+bf 0, start
+
+
+
+
+
+
+
+li 1, 300 :game_over
+swr 0, 1 :make_screen_black3
+addi 1, 1, 1
+eqi 1, 3373, 3
+bf 3, make_screen_black3
+
+li 1, 4095 
+
+sw 1, 887 :loop // G
+sw 1, 951
+sw 1, 1015
+sw 1, 1079
+sw 1, 1143
+sw 1, 1207
+sw 1, 1271
+sw 1, 1335
+sw 1, 1399
+sw 1, 888
+sw 1, 889
+sw 1, 890
+sw 1, 891
+sw 1, 892
+sw 1, 893
+sw 1, 1400
+sw 1, 1401
+sw 1, 1402
+sw 1, 1403
+sw 1, 1405
+sw 1, 1404
+sw 1, 1145
+sw 1, 1146
+sw 1, 1147
+sw 1, 1148
+sw 1, 1149
+sw 1, 1213
+sw 1, 1277
+sw 1, 1341
+sw 1, 1154
+sw 1, 1158
+
+sw 1, 900 //A
+sw 1, 965
+sw 1, 1029
+sw 1, 1093
+sw 1, 963
+sw 1, 1027
+sw 1, 1091
+sw 1, 1222
+sw 1, 1286
+sw 1, 1218
+sw 1, 1282
+sw 1, 1287
+sw 1, 1351
+sw 1, 1415
+sw 1, 1281
+sw 1, 1345
+sw 1, 1409
+sw 1, 1219
+sw 1, 1220
+sw 1, 1221
+
+sw 1, 907 //M
+sw 1, 971
+sw 1, 1035
+sw 1, 1099
+sw 1, 1163
+sw 1, 1227
+sw 1, 1291
+sw 1, 1355
+sw 1, 1419
+sw 1, 913
+sw 1, 977
+sw 1, 1041
+sw 1, 1105
+sw 1, 1169
+sw 1, 1233
+sw 1, 1297
+sw 1, 1361
+sw 1, 1425
+sw 1, 972
+sw 1, 1037
+sw 1, 1102
+sw 1, 1039
+sw 1, 976
+
+sw 1, 917 //E
+sw 1, 981
+sw 1, 1045
+sw 1, 1109
+sw 1, 1173
+sw 1, 1237
+sw 1, 1301
+sw 1, 1365
+sw 1, 1429
+sw 1, 1430
+sw 1, 1431
+sw 1, 1432
+sw 1, 1433
+sw 1, 1434
+sw 1, 1435
+sw 1, 918
+sw 1, 919
+sw 1, 920
+sw 1, 921
+sw 1, 922
+sw 1, 923
+sw 1, 1174
+sw 1, 1175
+sw 1, 1176
+sw 1, 1177
+sw 1, 1178
+sw 1, 1179
+
+sw 1, 1655 //O
+sw 1, 1719
+sw 1, 1783
+sw 1, 1847
+sw 1, 1911
+sw 1, 1975
+sw 1, 2039
+sw 1, 2103
+sw 1, 2167
+sw 1, 1661
+sw 1, 1725
+sw 1, 1789
+sw 1, 1853
+sw 1, 1917
+sw 1, 1981
+sw 1, 2045
+sw 1, 2109
+sw 1, 2173
+sw 1, 1656
+sw 1, 1657
+sw 1, 1658
+sw 1, 1659
+sw 1, 1660
+sw 1, 2168
+sw 1, 2169
+sw 1, 2170
+sw 1, 2171
+sw 1, 2172
+
+sw 1, 1665 //V
+sw 1, 1729
+sw 1, 1793
+sw 1, 1671
+sw 1, 1735
+sw 1, 1799
+sw 1, 1858
+sw 1, 1922
+sw 1, 1986
+sw 1, 2050
+sw 1, 1862
+sw 1, 1926
+sw 1, 1990
+sw 1, 2054
+sw 1, 2115
+sw 1, 2179
+sw 1, 2180
+sw 1, 2181
+sw 1, 2117
+
+sw 1, 1675 //E
+sw 1, 1739
+sw 1, 1803
+sw 1, 1867
+sw 1, 1931
+sw 1, 1995
+sw 1, 2059
+sw 1, 2123
+sw 1, 2187
+sw 1, 1676
+sw 1, 1677
+sw 1, 1678
+sw 1, 1679
+sw 1, 1680
+sw 1, 1681
+sw 1, 1932
+sw 1, 1933
+sw 1, 1934
+sw 1, 1935
+sw 1, 1936
+sw 1, 1937
+sw 1, 2188
+sw 1, 2189
+sw 1, 2190
+sw 1, 2191
+sw 1, 2192
+sw 1, 2193
+
+sw 1, 1685 //R
+sw 1, 1749
+sw 1, 1813
+sw 1, 1877
+sw 1, 1941
+sw 1, 2005
+sw 1, 2069
+sw 1, 2133
+sw 1, 2197
+sw 1, 1686
+sw 1, 1687
+sw 1, 1688
+sw 1, 1689
+sw 1, 1690
+sw 1, 1691
+sw 1, 1755
+sw 1, 1819
+sw 1, 1883
+sw 1, 1947
+sw 1, 1946
+sw 1, 1945
+sw 1, 1944
+sw 1, 1943
+sw 1, 1942
+sw 1, 2008
+sw 1, 2073
+sw 1, 2138
+sw 1, 2203
+
+sw 1, 1695 //!
+sw 1, 1759
+sw 1, 1823
+sw 1, 1887
+sw 1, 1951
+sw 1, 2015
+sw 1, 2079
+sw 1, 2207
+
+sw 1, 2806 //A
+sw 1, 2869
+sw 1, 2871
+sw 1, 2933
+sw 1, 2934
+sw 1, 2935
+sw 1, 2997
+sw 1, 2999
+sw 1, 3061
+sw 1, 3063
+
+sw 1, 2809 //G
+sw 1, 2873
+sw 1, 2937
+sw 1, 3001
+sw 1, 3065
+sw 1, 2810
+sw 1, 2811
+sw 1, 2938
+sw 1, 2939
+sw 1, 3003
+sw 1, 3066
+sw 1, 3067
+
+sw 1, 2814 //A
+sw 1, 2877
+sw 1, 2879
+sw 1, 2941
+sw 1, 2942
+sw 1, 2943
+sw 1, 3005
+sw 1, 3007
+sw 1, 3069
+sw 1, 3071
+
+sw 1, 2817 //I
+sw 1, 2818
+sw 1, 2819
+sw 1, 2882
+sw 1, 2946
+sw 1, 3010
+sw 1, 3074
+sw 1, 3075
+sw 1, 3073
+
+sw 1, 2821 //N
+sw 1, 2822
+sw 1, 2823
+sw 1, 2885
+sw 1, 2887
+sw 1, 2949
+sw 1, 2951
+sw 1, 3013
+sw 1, 3015
+sw 1, 3077
+sw 1, 3079
+
+sw 1, 2825 //?
+sw 1, 2826
+sw 1, 2827
+sw 1, 2891
+sw 1, 2955
+sw 1, 2954
+sw 1, 2953
+sw 1, 3017
+sw 1, 3081
+sw 1, 3209
+
+sw 1, 2834 //Y
+sw 1, 2836
+sw 1, 2899
+sw 1, 2963
+sw 1, 3027
+
+sw 1, 2844 //N
+sw 1, 2845
+sw 1, 2846
+sw 1, 2908
+sw 1, 2910
+sw 1, 2972
+sw 1, 2974
+sw 1, 3036
+sw 1, 3038
+
+eqi 31, 3, 3 :play_again
+bf 3, highlight_left
+andi 4, 0, 4
+li 1, 4095
+sw 1, 2844 //N
+sw 1, 2845
+sw 1, 2846
+sw 1, 2908
+sw 1, 2910
+sw 1, 2972
+sw 1, 2974
+sw 1, 3036
+sw 1, 3038
+
+li 1, 4080
+sw 1, 2834 //Y
+sw 1, 2836
+sw 1, 2899
+sw 1, 2963
+sw 1, 3027
+eqi 31, 4, 3 :highlight_left
+bf 3, highlight_right
+ori 4, 1, 4
+li 1, 4080
+sw 1, 2844 //N
+sw 1, 2845
+sw 1, 2846
+sw 1, 2908
+sw 1, 2910
+sw 1, 2972
+sw 1, 2974
+sw 1, 3036
+sw 1, 3038
+
+li 1, 4095
+sw 1, 2834 //Y
+sw 1, 2836
+sw 1, 2899
+sw 1, 2963
+sw 1, 3027
+
+eqi 31, 5, 3 :highlight_right
+bf 3, play_again
+li 1, 300 
+swr 0, 1 :make_screen_black4
+addi 1, 1, 1
+eqi 1, 3373, 3
+bf 3, make_screen_black4
+jalr 2, 0, 0
+
+
+
+
+li 1, 4095 :ttt
+li 2, 321
+li 3, 343
+li 28, 1804
+li 27, 15
+li 30, 0
+li 29, 0
+li 18, 0
+li 19, 0
+li 20, 0
+li 21, 0
+li 22, 0
+li 23, 0
+li 24, 0
+li 25, 0
+li 26, 0
+
+
+swr 1, 2 :set_up_vertical
+swr 1, 3
+addi 2, 64, 2
+addi 3, 64, 3
+ilti 2, 3372, 4
+bt 4, set_up_vertical
+
+li 2, 1260
+li 3, 2284
+swr 1, 2 :set_up_horizontal
+swr 1, 3
+addi 2, 1, 2
+addi 3, 1, 3 
+ilti 2, 1324, 4
+bt 4, set_up_horizontal
+
+li 1, 240
+swr 1, 28
+
+lui 1, 35 :ttt_loop // timer to slow movement on monitor
+li 4, 50880
+slogi 4, -1, 4
+or 1, 4, 1
+bf 1, ttt_timer_over :ttt_timer
+addi 1, -1, 1
+jal 0, ttt_timer
+
+eqi 31, 1, 1 :ttt_timer_over
+bf 1, skip_move_cursor_up
+add 30, 29, 1
+add 1, 28, 1
+swr 0, 1
+addi 29, -1024, 29 :taken_spot_up
+ilti 29, -1024, 1
+bf 1, move_cursor_up
+li 29, 1024
+add 30, 29, 1 :move_cursor_up
+add 1, 28, 1
+addi 1, -329, 1
+lw 1, 0, 1
+bt 1, taken_spot_up
+
+eqi 31, 2, 1 :skip_move_cursor_up
+bf 1, skip_move_cursor_down
+add 30, 29, 1
+add 1, 28, 1
+swr 0, 1
+addi 29, 1024, 29 :taken_spot_down
+ilti 29, 1025, 1
+bt 1, move_cursor_down
+li 29, -1024
+add 30, 29, 1 :move_cursor_down
+add 1, 28, 1
+addi 1, -329, 1
+lw 1, 0, 1
+bt 1, taken_spot_down
+
+eqi 31, 3, 1 :skip_move_cursor_down
+bf 1, skip_move_cursor_left
+add 30, 29, 1
+add 1, 28, 1
+swr 0, 1
+addi 30, -22, 30 :taken_spot_left
+ilti 30, -22, 1
+bf 1, move_cursor_left
+li 30, 22
+add 30, 29, 1 :move_cursor_left
+add 1, 28, 1
+addi 1, -329, 1
+lw 1, 0, 1
+bt 1, taken_spot_left
+
+eqi 31, 4, 1 :skip_move_cursor_left
+bf 1, skip_move_cursor_right
+add 30, 29, 1
+add 1, 28, 1
+swr 0, 1
+addi 30, 22, 30 :taken_spot_right
+ilti 30, 23, 1
+bt 1, move_cursor_right
+li 30, -22
+add 30, 29, 1 :move_cursor_right
+add 1, 28, 1
+addi 1, -329, 1
+lw 1, 0, 1
+bt 1, taken_spot_right
+
+eqi 31, 5, 1 :skip_move_cursor_right
+bf 1, select_spot
+eqi 27, 15, 1
+bt 1, blue
+jal 3, draw_X
+li 27, 15
+bf 0, fill
+jal 3, draw_circle :blue
+add 29, 30, 2
+add 28, 2, 2
+swr 0, 2
+li 27, 3840
+jal 1, fill_spot :fill
+jal 1, check_for_three
+jal 1, next_empty_spot
+
+li 1, 240 :select_spot
+add 30, 29, 2
+add 2, 28, 2
+swr 1, 2
+bf 0, ttt_loop
+
+bt 18, next_spot_1 :next_empty_spot
+li 30, -22
+li 29, -1024
+jalr 1, 0, 0
+bt 19, next_spot_2 :next_spot_1
+li 30, 0
+li 29, -1024
+jalr 1, 0, 0
+bt 20, next_spot_3 :next_spot_2
+li 30, 22
+li 29, -1024
+jalr 1, 0, 0
+bt 21, next_spot_4 :next_spot_3
+li 30, -22
+li 29, 0
+jalr 1, 0, 0
+bt 22, next_spot_5 :next_spot_4
+li 30, 0
+li 29, 0
+jalr 1, 0, 0
+bt 23, next_spot_6 :next_spot_5
+li 30, 22
+li 29, 0
+jalr 1, 0, 0
+bt 24, next_spot_7 :next_spot_6
+li 30, -22
+li 29, 1024
+jalr 1, 0, 0
+bt 25, next_spot_8 :next_spot_7
+li 30, 0
+li 29, 1024
+jalr 1, 0, 0
+bt 26 next_spot_9 :next_spot_8
+li 30, 22
+li 29, 1024
+jalr 1, 0, 0
+li 30, 22 :next_spot_9
+bf 0, game_over1
+
+add 29, 30, 2 :fill_spot
+eqi 2, -1046, 3
+bf 3, fill_spot_1
+addi 27, 0, 18
+jalr 1, 0, 0
+eqi 2, -1024, 3 :fill_spot_1
+bf 3, fill_spot_2
+addi 27, 0, 19
+jalr 1, 0, 0
+eqi 2, -1002, 3 :fill_spot_2
+bf 3, fill_spot_3
+addi 27, 0, 20
+jalr 1, 0, 0
+eqi 2, -22, 3 :fill_spot_3
+bf 3, fill_spot_4
+addi 27, 0, 21
+jalr 1, 0, 0
+eqi 2, 0, 3 :fill_spot_4
+bf 3, fill_spot_5
+addi 27, 0, 22
+jalr 1, 0, 0
+eqi 2, 22, 3 :fill_spot_5
+bf 3, fill_spot_6
+addi 27, 0, 23
+jalr 1, 0, 0
+eqi 2, 1002, 3 :fill_spot_6
+bf 3, fill_spot_7
+addi 27, 0, 24
+jalr 1, 0, 0
+eqi 2, 1024, 3 :fill_spot_7
+bf 3, fill_spot_8
+addi 27, 0, 25
+jalr 1, 0, 0
+addi 27, 0, 26 :fill_spot_8
+jalr 1, 0, 0
+
+eq 18, 19, 2 :check_for_three
+eq 18, 20, 3
+neq 18, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner1
+li 1, 748
+li 2, 64
+li 3, 4095
+swr 3, 1 :three_in_a_row_1
+addi 1, 1, 1
+addi 2, -1, 2
+bt 2, three_in_a_row_1
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 21, 22, 2 :winner1
+eq 21, 23, 3
+neq 21, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner2
+li 1, 1772
+li 2, 64
+li 3, 4095
+swr 3, 1 :three_in_a_row_2
+addi 1, 1, 1
+addi 2, -1, 2
+bt 2, three_in_a_row_2
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 24, 26, 2 :winner2
+eq 24, 25, 3
+neq 24, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner3
+li 1, 2796
+li 2, 64
+li 3, 4095
+swr 3, 1 :three_in_a_row_3
+addi 1, 1, 1
+addi 2, -1, 2
+bt 2, three_in_a_row_3
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 18, 21, 2 :winner3
+eq 18, 24, 3
+neq 21, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner4
+li 1, 310
+li 2, 48
+li 3, 4095
+swr 3, 1 :three_in_a_row_4
+addi 1, 64, 1
+addi 2, -1, 2
+bt 2, three_in_a_row_4
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 19, 22, 2 :winner4
+eq 19, 25, 3
+neq 22, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner5
+li 1, 332
+li 2, 48
+li 3, 4095
+swr 3, 1 :three_in_a_row_5
+addi 1, 64, 1
+addi 2, -1, 2
+bt 2, three_in_a_row_5
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 20, 23, 2 :winner5
+eq 20, 26, 3
+neq 20, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner6
+li 1, 354
+li 2, 48
+li 3, 4095
+swr 3, 1 :three_in_a_row_6
+addi 1, 64, 1
+addi 2, -1, 2
+bt 2, three_in_a_row_6
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 18, 22, 2 :winner6
+eq 18, 26, 3
+neq 22, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner7
+li 1, 300
+li 2, 301
+li 3, 4095
+li 7, 0
+swr 3, 1 :three_in_a_row_7
+swr 3, 2
+addi 1, 65, 1
+addi 2, 65, 2
+addi 7, 1, 7
+eqi 7, 3, 8
+bf 8, skip_three_1
+li 7, 0
+addi 1, 1, 1
+addi 2, 1, 2
+ilti 1, 3373, 4 :skip_three_1
+bt 4, three_in_a_row_7
+addi 27, 0, 1
+bf 0, game_over1
+
+eq 20, 22, 2 :winner7
+eq 20, 24, 3
+neq 22, 0, 4
+and 2, 3, 2
+and 2, 4, 2
+bf 2, winner8
+li 1, 363
+li 2, 362
+li 3, 4095
+li 7, 0
+swr 3, 1 :three_in_a_row_8
+swr 3, 2
+addi 1, 63, 1
+addi 2, 63, 2
+addi 7, 1, 7
+eqi 7, 3, 8
+bf 8, skip_three_2
+li 7, 0
+addi 1, -1, 1
+addi 2, -1, 2
+ilti 1, 3373, 4 :skip_three_2
+bt 4, three_in_a_row_8
+addi 27, 0, 1
+bf 0, game_over1
+
+jalr 1, 0, 0 :winner8
+
+lui 1, 70 :game_over1 
+li 4, 50880
+slogi 4, -1, 4
+or 1, 4, 1
+bf 1, ttt_timer_over1 :ttt_timer1
+addi 1, -1, 1
+jal 0, ttt_timer1
+jal 2, game_over :ttt_timer_over1
+bf 4, ttt
+bf 0, start
+
+
+add 29, 30, 2 :draw_circle
+addi 2, -64, 2
+li 1, 1543
+add 2, 1, 1
+swr 27, 1
+li 1, 1544
+add 2, 1, 1
+swr 27, 1
+li 1, 1545
+add 2, 1, 1
+swr 27, 1  
+li 1, 1546
+add 2, 1, 1
+swr 27, 1 
+li 1, 1547
+add 2, 1, 1
+swr 27, 1
+li 1, 1548
+add 2, 1, 1
+swr 27, 1 
+li 1, 1549
+add 2, 1, 1
+swr 27, 1 
+li 1, 1550
+add 2, 1, 1
+swr 27, 1 
+li 1, 1551
+add 2, 1, 1
+swr 27, 1 
+li 1, 1552
+add 2, 1, 1
+swr 27, 1 
+li 1, 1553
+add 2, 1, 1
+swr 27, 1
+li 1, 1607
+add 2, 1, 1
+swr 27, 1 
+li 1, 1671
+add 2, 1, 1
+swr 27, 1
+li 1, 1735
+add 2, 1, 1
+swr 27, 1
+li 1, 1799
+add 2, 1, 1
+swr 27, 1
+li 1, 1863
+add 2, 1, 1
+swr 27, 1
+li 1, 1927
+add 2, 1, 1
+swr 27, 1
+li 1, 1991
+add 2, 1, 1
+swr 27, 1
+li 1, 2055
+add 2, 1, 1
+swr 27, 1
+li 1, 2119
+add 2, 1, 1
+swr 27, 1
+li 1, 2183
+add 2, 1, 1
+swr 27, 1
+li 1, 2184
+add 2, 1, 1
+swr 27, 1
+li 1, 2185
+add 2, 1, 1
+swr 27, 1
+li 1, 2186
+add 2, 1, 1
+swr 27, 1
+li 1, 2187
+add 2, 1, 1
+swr 27, 1
+li 1, 2188
+add 2, 1, 1
+swr 27, 1
+li 1, 2189
+add 2, 1, 1
+swr 27, 1
+li 1, 2190
+add 2, 1, 1
+swr 27, 1
+li 1, 2191
+add 2, 1, 1
+swr 27, 1
+li 1, 2192
+add 2, 1, 1
+swr 27, 1
+li 1, 2193
+add 2, 1, 1
+swr 27, 1
+li 1, 2129
+add 2, 1, 1
+swr 27, 1
+li 1, 2065
+add 2, 1, 1
+swr 27, 1
+li 1, 2001
+add 2, 1, 1
+swr 27, 1
+li 1, 1937
+add 2, 1, 1
+swr 27, 1
+li 1, 1873
+add 2, 1, 1
+swr 27, 1
+li 1, 1809
+add 2, 1, 1
+swr 27, 1
+li 1, 1745
+add 2, 1, 1
+swr 27, 1
+li 1, 1681
+add 2, 1, 1
+swr 27, 1
+li 1, 1617
+add 2, 1, 1
+swr 27, 1
+jalr 3, 0, 0
+
+add 29, 30, 2 :draw_X
+li 1, 1479
+li 4, 1489
+add 29, 30, 2
+add 1, 2, 1
+add 4, 2, 4
+addi 2, 2140, 2
+swr 27, 1 :diagonal
+swr 27, 4
+addi 1, 65, 1
+addi 4, 63, 4
+ilt 1, 2, 5
+bt 5, diagonal
+jalr 3, 0, 0
+
+li 26, 4095 :pong
+li 27, 1846
+li 30, 65
+li 28, 1899
+li 29, 1836
+sw 26, 1899
+sw 26, 1835
+sw 26, 1771
+sw 26, 1963
+sw 26, 2027
+sw 26, 1836
+sw 26, 1772
+sw 26, 1708
+sw 26, 1900
+sw 26, 1964
+
+lui 1, 8 :pong_loop // timer to slow movement on monitor
+li 4, 50880
+slogi 4, -1, 4
+or 1, 4, 1
+bf 1, pong_timer_over :pong_timer
+addi 1, -1, 1
+jal 0, pong_timer
+
+swr 0, 27 :pong_timer_over
+add 30, 27, 27 
+
+ilti 27, 300, 1
+bf 1, bounce_down 
+addi 27, 128, 27
+addi 30, 128, 30
+ilti 27, 3373, 1 :bounce_down
+bt 1, bounce_up
+addi 27, -128, 27
+addi 30, -128, 30
+addi 27, 0, 2 :bounce_up
+ilti 2, 299, 1 :left_border
+bt 1, bounce_right
+eqi 2, 299, 1 
+eqi 30, 63, 3
+eqi 30, -65, 4
+or 3, 4, 3
+and 3, 1, 1
+bf 1, check_if_at_left_border
+jal 2, game_over
+bf 4, pong
+bf 0, start
+addi 2, -64, 2 :check_if_at_left_border
+bf 0, left_border
+lw 27, 64, 1 :bounce_right
+eqi 30, 63, 3
+eqi 30, -65, 4
+and 1, 4, 2
+lw 27, -64, 1
+and 1, 3, 1
+or 1, 2, 1
+bf 1, dont_bounce
+addi 27, 2, 27
+addi 30, 2, 30
+addi 27, 0, 2 :dont_bounce
+ilti 2, 299, 1 :right_border
+bt 1, bounce_left
+eqi 2, 363, 1 
+eqi 30, 65, 3
+eqi 30, -63, 4
+or 3, 4, 3
+and 3, 1, 1
+bf 1, check_if_at_right_border
+addi 27, -2, 27
+addi 30, -2, 30
+addi 2, -64, 2 :check_if_at_right_border
+bf 0, right_border
+swr 26, 27 :bounce_left
+
+sub 27, 28, 1
+ilt 0, 1, 2
+ilti 27, 491, 3
+xori 3, 1, 3
+and 2, 3, 2
+bt 2, move_bot_up
+addi 28, 128, 28
+swr 0, 28
+addi 28, -320, 28
+swr 26, 28
+addi 28, 128, 28 
+sub 27, 28, 1 :move_bot_up
+ilt 1, 0, 2
+ilti 27, 3180, 3
+and 2, 3, 2
+bt 2, move_bot_down
+addi 28, -128, 28
+swr 0, 28
+addi 28, 320, 28
+swr 26, 28
+addi 28, -128, 28 
+
+eqi 31, 1, 1 :move_bot_down
+ilti 29, 429, 2
+xori 2, 1, 2
+and 1, 2, 1
+bf 1, move_player_up
+addi 29, 128, 29
+swr 0, 29
+addi 29, -320, 29
+swr 26, 29
+addi 29, 128, 29 
+eqi 31, 2, 1 :move_player_up
+ilti 29, 3180, 2
+and 1, 2, 1
+bf 1, move_player_down
+addi 29, -128, 29
+swr 0, 29
+addi 29, 320, 29
+swr 26, 29
+addi 29, -128, 29 
+bf 0, pong_loop :move_player_down
+
+
+
+
