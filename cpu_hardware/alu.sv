@@ -42,7 +42,7 @@ localparam ADD = 5'd0,
            EBREAK = 5'd31;
     always_comb begin 
             case(alu_op)
-                ADD, ADDI,JALR: result = reg1 + reg2;
+                ADD, ADDI, JALR, LW: result = reg1 + reg2;
                 SUB: result = reg1 - reg2;
                 AND, ANDI: result = reg1 & reg2;
                 OR, ORI: result = reg1 | reg2;
@@ -57,4 +57,5 @@ localparam ADD = 5'd0,
             endcase
     end
 endmodule
+
 
