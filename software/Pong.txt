@@ -1,0 +1,126 @@
+// reg 30 is the "velocity" of the ball
+// reg 29 is the player position
+// reg 28 is the bot position
+// reg 27 is the ball position
+// reg 26 is the color white
+
+li 26, 4095
+li 27, 1846
+li 30, 65
+li 28, 1899
+li 29, 1836
+sw 26, 1899
+sw 26, 1835
+sw 26, 1771
+sw 26, 1963
+sw 26, 2027
+sw 26, 1836
+sw 26, 1772
+sw 26, 1708
+sw 26, 1900
+sw 26, 1964
+
+lui 1, 8 :pong_loop // timer to slow movement on monitor
+li 4, 50880
+slogi 4, -1, 4
+or 1, 4, 1
+bf 1, pong_timer_over :pong_timer
+addi 1, -1, 1
+jal 0, pong_timer
+
+swr 0, 27 :pong_timer_over
+add 30, 27, 27 
+
+ilti 27, 300, 1
+bf 1, bounce_down 
+addi 27, 128, 27
+addi 30, 128, 30
+ilti 27, 3373, 1 :bounce_down
+bt 1, bounce_up
+addi 27, -128, 27
+addi 30, -128, 30
+addi 27, 0, 2 :bounce_up
+ilti 2, 299, 1 :left_border
+bt 1, bounce_right
+eqi 2, 299, 1 
+eqi 30, 63, 3
+eqi 30, -65, 4
+or 3, 4, 3
+and 3, 1, 1
+bf 1, check_if_at_left_border
+bf 0, make_screen_blackk
+addi 2, -64, 2 :check_if_at_left_border
+bf 0, left_border
+lw 27, 64, 1 :bounce_right
+eqi 30, 63, 3
+eqi 30, -65, 4
+and 1, 4, 2
+lw 27, -64, 1
+and 1, 3, 1
+or 1, 2, 1
+bf 1, dont_bounce
+addi 27, 2, 27
+addi 30, 2, 30
+addi 27, 0, 2 :dont_bounce
+ilti 2, 299, 1 :right_border
+bt 1, bounce_left
+eqi 2, 363, 1 
+eqi 30, 65, 3
+eqi 30, -63, 4
+or 3, 4, 3
+and 3, 1, 1
+bf 1, check_if_at_right_border
+addi 27, -2, 27
+addi 30, -2, 30
+addi 2, -64, 2 :check_if_at_right_border
+bf 0, right_border
+swr 26, 27 :bounce_left
+
+sub 27, 28, 1
+ilt 0, 1, 2
+ilti 27, 491, 3
+xori 3, 1, 3
+and 2, 3, 2
+bt 2, move_bot_up
+addi 28, 128, 28
+swr 0, 28
+addi 28, -320, 28
+swr 26, 28
+addi 28, 128, 28 
+sub 27, 28, 1 :move_bot_up
+ilt 1, 0, 2
+ilti 27, 3180, 3
+and 2, 3, 2
+bt 2, move_bot_down
+addi 28, -128, 28
+swr 0, 28
+addi 28, 320, 28
+swr 26, 28
+addi 28, -128, 28 
+
+eqi 31, 1, 1 :move_bot_down
+ilti 29, 429, 2
+xori 2, 1, 2
+and 1, 2, 1
+bf 1, move_player_up
+addi 29, 128, 29
+swr 0, 29
+addi 29, -320, 29
+swr 26, 29
+addi 29, 128, 29 
+eqi 31, 2, 1 :move_player_up
+ilti 29, 3180, 2
+and 1, 2, 1
+bf 1, move_player_down
+addi 29, -128, 29
+swr 0, 29
+addi 29, 320, 29
+swr 26, 29
+addi 29, -128, 29 
+bf 0, pong_loop :move_player_down
+
+li 1, 300 :make_screen_blackk
+swr 0, 1 :make_screen_black
+addi 1, 1, 1
+eqi 1, 3373, 2
+bf 2, make_screen_black
