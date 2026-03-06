@@ -298,8 +298,7 @@ always_ff @(posedge clk) begin
             mem_data_out <= 32'b0;
             RAM[memaddr] <= memdata;
         end else if(mem_alu_op == LI) begin
-            if(mema)
-            mem_data_out <= {{15{1'b0}},memaddr};
+            mem_data_out <= {{15{memaddr[16]}},memaddr};
         end else if(mem_alu_op == LUI) begin
             mem_data_out <= {memaddr[14:0],17'b0};
         end else begin
@@ -405,6 +404,7 @@ initial begin
 end
 endmodule
 */
+
 
 
 
