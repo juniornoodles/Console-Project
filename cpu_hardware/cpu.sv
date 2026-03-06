@@ -5,13 +5,13 @@ January 5 2026
 
 module cpu(
     input logic clk,
+    input logic clk25, //For vga timing
     input logic reset,
-    input logic pause,
-    input logic finish_debug
+    input logic step,
+    input logic finish_debug,
     //step and finish_debug are signals for debugging when ebreak is called.
     //The cpu detects the rising edge of step and allows one cycle to go through
     //When finish_debug is turned on, debug mode turns off
-    input logic clk25, // Clock for vga timing
     input logic up,
     input logic down,
     input logic left,
@@ -46,7 +46,6 @@ always_ff @(posedge clk) begin
     step_prev <= step_sync;
 end
 assign debounced_step = step_sync & ~step_prev; // Rising edge detector
-
 localparam START_OF_PROGRAM = 13'h0000;
 localparam RAM_SIZE = 131072;
 localparam PC_SIZE = 8192;   
@@ -129,7 +128,8 @@ logic [12:0] addr;
 logic [31:0] RAM_read_data;
 logic [31:0] mem_data_out;
 logic [4:0] writeback_op;
-    assign addr = flush ? (alu_op == JALR ? alu_result[12:0] : pc - 1 + not_predicted_offset ): pc - 1 + predicted_offset; // Logic to get the correct instruction from instruction memory
+// Logic to get the correct instruction from instruction memory
+assign addr = flush ? (alu_op == JALR ? alu_result[12:0] : pc - 1 + not_predicted_offset ): pc - 1 + predicted_offset;
 alu alu_inst(
     .reg1(operand1),
     .reg2(operand2),
@@ -142,7 +142,8 @@ reg_file reg_file_inst(
     .write_en(write_en),
     .wr_addr(writeback_regaddr), 
     .wr_data(writeback_data), 
-    .rd1_addr(instruction[4:0] != SW ? instruction[14:10] : instruction[9:5]), //Checks if it is a store to get contents from rd reg
+    //Checks if it is a store to get contents from rd reg
+    .rd1_addr(instruction[4:0] != SW ? instruction[14:10] : instruction[9:5]),
     .rd2_addr(instruction[19:15]),
     .up(up),
     .down(down),
@@ -154,8 +155,10 @@ reg_file reg_file_inst(
 );
 Hazard_unit hazard_unit_inst(
     .clk(clk),
-    .decode_reg1(instruction[4:0] != SW ?instruction[14:10] : instruction[9:5]), //Checks if it is a store to get contents from rd reg
-    .decode_reg2(instruction[4:0] <= R_TYPE | instruction[4:0] == SWR ? instruction[19:15] : 5'b0), //If not R-type, no second reg to hazard check
+    //Checks if it is a store to get contents from rd reg
+    .decode_reg1(instruction[4:0] != SW ? instruction[14:10] : instruction[9:5]),
+    //If not R-type, no second reg to hazard check
+    .decode_reg2(instruction[4:0] <= R_TYPE | instruction[4:0] == SWR ? instruction[19:15] : 5'b0), 
     .execute_reg_check(rd),
     .memory_reg(writeback_regaddr_in),
     .writeback_reg(writeback_regaddr),
@@ -221,9 +224,9 @@ always_ff @(posedge clk, posedge reset) begin
         pc <= START_OF_PROGRAM;
     end else if (flush) begin
         if(alu_op == JALR) begin
-            pc <= alu_result[12:0];
+            pc <= alu_result[12:0]; //Whatever is in the register plus the immidate value for the jump address
         end else begin
-            pc <= pc + not_predicted_offset;
+            pc <= pc + not_predicted_offset; //If a flush is needed then the wrong branch outcome was predicted
         end
     end else if (stall | halted) begin
         pc <= pc;
@@ -232,7 +235,7 @@ always_ff @(posedge clk, posedge reset) begin
     end
 end
 
-always_ff @(posedge clk) begin
+always_ff @(posedge clk) begin //Here just so JAL and JALR can have the program instruction to store in a register
     if (!stall & !halted) begin
         pc_ID <= pc + 1;
         pc_EX <= pc_ID;
@@ -245,8 +248,9 @@ end
 
 
 //Decode stage
-always_comb begin  //If it is an R type then take the contents of the 2 read port, otherwise its an immediate, take it from he instruction itself. Contains sign extending logic.
-    operand2_in = (instruction[4:0] <= R_TYPE ? reg_read_addr2 : (instruction[4:0] == ADDI | instruction[4:0] == ILTI | instruction[4:0] == SLOGI | instruction[4:0] == LI | instruction[4:0] == SARII | instruction[4:0] == BT | instruction[4:0] == BF | instruction[4:0] == JALR | instruction[4:0] == LW | instruction[4:0] == EQI | instruction[4:0] == NEQI) & instruction[31] == 1 ? {{15{1'b1}},instruction[31:15]} : {{15{1'b0}},instruction[31:15]});
+always_comb begin
+    //If it is an R type then take the contents of the 2 read port, otherwise its an immediate, take it from he instruction itself. Contains sign extending logic.
+    operand2_in = (instruction[4:0] <= R_TYPE | instruction[4:0] == SWR ? reg_read_addr2 : (instruction[4:0] == ADDI | instruction[4:0] == ILTI | instruction[4:0] == SLOGI | instruction[4:0] == SARII | instruction[4:0] == BT | instruction[4:0] == BF | instruction[4:0] == JALR | instruction[4:0] == LW | instruction[4:0] == LI) & instruction[31] == 1 ? {{15{1'b1}},instruction[31:15]} : {{15{1'b0}},instruction[31:15]});
     operand1_in = reg_read_addr1;
 end
 
@@ -258,7 +262,8 @@ always_comb begin
     if(alu_op == JALR) begin
         flush = 1'b1;
     end else if((alu_op == BT | alu_op == BF)) begin
-        if(decode_result2[31] ^ alu_result[0]) begin // With BTFNT prediction, if the offset is negative and the alu determines a branch shouldn't happen the predicition is wrong and vice versa
+        // With BTFNT prediction, if the offset is negative and the alu determines a branch shouldn't happen the predicition is wrong and vice versa
+        if(decode_result2[31] ^ alu_result[0]) begin
             flush = 1'b1;
         end else begin
             flush = 1'b0;
@@ -287,13 +292,14 @@ always_ff @(posedge clk) begin
     RAM_read_data <= RAM[memaddr];
     writeback_op <= mem_alu_op;
     if(!halted) begin
-        write_en <= (mem_alu_op == SW | mem_alu_op == BT | mem_alu_op == BF | mem_alu_op == EBREAK) ? 1'b0 : 1'b1;
+        write_en <= (mem_alu_op == SW | mem_alu_op == BT | mem_alu_op == BF | mem_alu_op == EBREAK | mem_alu_op == SWR) ? 1'b0 : 1'b1;
         writeback_regaddr <= writeback_regaddr_in;
         if (mem_alu_op == SW | mem_alu_op == SWR) begin
             mem_data_out <= 32'b0;
             RAM[memaddr] <= memdata;
         end else if(mem_alu_op == LI) begin
-            mem_data_out <= {{15{memaddr[16]}},memaddr};
+            if(mema)
+            mem_data_out <= {{15{1'b0}},memaddr};
         end else if(mem_alu_op == LUI) begin
             mem_data_out <= {memaddr[14:0],17'b0};
         end else begin
@@ -357,7 +363,6 @@ always_ff @(posedge clk25) begin
     pixel_data <= RAM[pixel_address][11:0]; //Get pixel data from video memory
 end
 
-
 endmodule
 
 module top(
@@ -400,6 +405,7 @@ initial begin
 end
 endmodule
 */
+
 
 
 
