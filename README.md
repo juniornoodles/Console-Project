@@ -137,3 +137,9 @@ jal 2, here
 Anything written after the instruction (or after the label) on the same line is considered a comment.
 
 If you look at the assembler code, you will probably find work arounds to still assemble the machine code, which is fine if you'd like to do so. I just wanted to explain my intent with the assembler.
+
+# Games
+
+I have Snake, Tic-Tac-Toe, and Pong on the console. The machine code to run the games is in Machine_code.mem in the cpu_hardware directory.
+
+The logic for the games themselves are in the software directory. I have each game seperate if anyone wants to see the logic, and I have the entire code for the console in Console_Games.txt.
