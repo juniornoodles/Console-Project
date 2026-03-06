@@ -250,7 +250,7 @@ end
 //Decode stage
 always_comb begin
     //If it is an R type then take the contents of the 2 read port, otherwise its an immediate, take it from he instruction itself. Contains sign extending logic.
-    operand2_in = (instruction[4:0] <= R_TYPE | instruction[4:0] == SWR ? reg_read_addr2 : (instruction[4:0] == ADDI | instruction[4:0] == ILTI | instruction[4:0] == SLOGI | instruction[4:0] == SARII | instruction[4:0] == BT | instruction[4:0] == BF | instruction[4:0] == JALR | instruction[4:0] == LW | instruction[4:0] == LI) & instruction[31] == 1 ? {{15{1'b1}},instruction[31:15]} : {{15{1'b0}},instruction[31:15]});
+    operand2_in = (instruction[4:0] <= R_TYPE | instruction[4:0] == SWR ? reg_read_addr2 : (instruction[4:0] == ADDI | instruction[4:0] == ILTI | instruction[4:0] == SLOGI | instruction[4:0] == SARII | instruction[4:0] == BT | instruction[4:0] == BF | instruction[4:0] == JALR | instruction[4:0] == EQI | instruction[4:0] == NEQI | instruction[4:0] == LI) & instruction[31] == 1 ? {{15{1'b1}},instruction[31:15]} : {{15{1'b0}},instruction[31:15]});
     operand1_in = reg_read_addr1;
 end
 
@@ -404,6 +404,7 @@ initial begin
 end
 endmodule
 */
+
 
 
 
