@@ -10,7 +10,7 @@ CPU specs:
 
 32 registers in register file
 
-524KB of RAM
+512KB of RAM
 
 32KB of instruction storage
 
